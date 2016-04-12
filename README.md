@@ -7,9 +7,12 @@
 we used a list of top 500 movies that we find on imdb.com to test the api.
 the list is under this directory named moviesNames.csv
 
+####the Code itself is in the file omdbdatafile.R in this directory 
+
 ###the authors of this work are : 
 * Ilya Simkin, id : 305828188
 * Or May-Paz, id : 301804134
+
 
 ###part one : installing and Loading packages
 
