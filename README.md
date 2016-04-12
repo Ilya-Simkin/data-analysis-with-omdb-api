@@ -298,3 +298,8 @@ countryScorsDataFrame <- rbind( countryScorsDataFrame,
   "lat" = countryToPosMap[[countryname]][2]) )
 }
 ```
+
+###part five : the visualisation time !
+* here we will demonstrate the visualizations we made and things we wanted to check by them :
+
+
