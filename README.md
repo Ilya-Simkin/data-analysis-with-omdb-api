@@ -302,4 +302,51 @@ countryScorsDataFrame <- rbind( countryScorsDataFrame,
 ###part five : the visualisation time !
 * here we will demonstrate the visualizations we made and things we wanted to check by them :
 
+#### The Box Plot of movie score distrebution
+*this is the box plot to show the scors distrebutions for 2 score systems for the movies
+* we wanted to see how the scors of those movies distrebute and how different the 2 scoring methods the ratings showen is pretty high   because we cose a list of top movies:
+* we multiplied the imdb scors to make them in the same scale as the meta score
+* we can seethat imdb scor is much more dens then the meta score its prove that humane voters are much less prown to middles as in the movie may be good or bad but not in between.
+```{r boxPlot  }
+boxplot(vector1, vector2 ,names = c("Meta Score","IMDB Score"),xlab="Score  types of movies ",ylab="distrebution of scors",main = "Plot of movie Scors distrebutions")
+```
+![alt text](https://github.com/Ilya-Simkin/data-analysis-with-omdb-api/blob/master/boxPlot1.PNG "boxPlot1")
+#### The Movies By Country 
+* we went on and explored by country in which the movie production teams were from
+* we can see that usa is taking the lead in number of movies by far
+```{r barPlot  }
+# this bar plot show how the movies distrebutes by the country they were made in
+barplot(table(countrysVec),
+        horiz=TRUE,
+        col=rainbow(length(table(countrysVec))),
+        cex.names=0.4,
+        xlab="ammount of movies",
+        las=2,
+        main = "top movies by Country")
+```
+![alt text](https://github.com/Ilya-Simkin/data-analysis-with-omdb-api/blob/master/barplot1.PNG "barplot1")
+
+#### The connection 
+* in this section we was looking for petters in the movies behavier by years 
+* those 2 plots were our attempt to see petterns in movie behvier 
+*in the first scater plot we want to see if there is a connection between the movie length and the number of voters that responed to this movie
+```{r scater1  }
+plot(strtoi(MoviesdataFrame$imdbVotes),strtoi(str_extract(MoviesdataFrame$Runtime,"[0-9]+")),main = "movie length vs number of movie responeses " , xlab = "number of Votes on that movie",ylab = "movie length in minuts")
+```
+![alt text](https://github.com/Ilya-Simkin/data-analysis-with-omdb-api/blob/master/scaterplot1.PNG "scater")
+
+* in this plot we want to see if there is a connection between the movies year to its length
+```{r scater2  }
+plot(strtoi(MoviesdataFrame$Year),strtoi(str_extract(MoviesdataFrame$Runtime,"[0-9]+")),main = "movie length vs number of movie responeses " , xlab = "movies year of production ",ylab = "movie length in minuts")
+```
+![alt text](https://github.com/Ilya-Simkin/data-analysis-with-omdb-api/blob/master/scaterplot2.PNG "scater2")
+
+ as you can see we could not fined the secret pattern in those plots 
+ 
+ *here we working with the corrolation data calculating the distance between vectors by the score we give each gener of movies as vector of years and in each one we look on the avarage movie length in that year
+```{r corr  }
+corrMacorrMatrix <- cor(corrMacorrMatrix)
+corrplot(corrMacorrMatrix, method = "square",main = "COrroleation matrix of Movie geners by movie length by years" ,col = colorRampPalette(c("red","yellow","green"))(100))
+```
+![alt text](https://github.com/Ilya-Simkin/data-analysis-with-omdb-api/blob/master/corr1.PNG "corr1")
 
