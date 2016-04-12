@@ -327,9 +327,8 @@ barplot(table(countrysVec),
 ![alt text](https://github.com/Ilya-Simkin/data-analysis-with-omdb-api/blob/master/barplot1.PNG "barplot1")
 
 #### The connection 
-* in this section we was looking for petters in the movies behavier by years 
 * those 2 plots were our attempt to see petterns in movie behvier 
-*in the first scater plot we want to see if there is a connection between the movie length and the number of voters that responed to this movie
+* in the first scater plot we want to see if there is a connection between the movie length and the number of voters that responed to this movie
 ```{r scater1  }
 plot(strtoi(MoviesdataFrame$imdbVotes),strtoi(str_extract(MoviesdataFrame$Runtime,"[0-9]+")),main = "movie length vs number of movie responeses " , xlab = "number of Votes on that movie",ylab = "movie length in minuts")
 ```
@@ -342,11 +341,40 @@ plot(strtoi(MoviesdataFrame$Year),strtoi(str_extract(MoviesdataFrame$Runtime,"[0
 ![alt text](https://github.com/Ilya-Simkin/data-analysis-with-omdb-api/blob/master/scaterplot2.PNG "scater2")
 
  as you can see we could not fined the secret pattern in those plots 
- 
+
+ #### The Corrolation matrix 
  *here we working with the corrolation data calculating the distance between vectors by the score we give each gener of movies as vector of years and in each one we look on the avarage movie length in that year
 ```{r corr  }
 corrMacorrMatrix <- cor(corrMacorrMatrix)
 corrplot(corrMacorrMatrix, method = "square",main = "COrroleation matrix of Movie geners by movie length by years" ,col = colorRampPalette(c("red","yellow","green"))(100))
 ```
 ![alt text](https://github.com/Ilya-Simkin/data-analysis-with-omdb-api/blob/master/corr1.PNG "corr1")
+on this graph we can see what geners of movies going well together by the feature we chose as important
 
+ #### The Map of Awards
+ * in this section we created a map of awards score by the scoring system we explained above 
+ * here we can see on a map what countrys win in the awards 
+ * no surprize here actually if we think about that
+ 
+```{r map  }
+#here we create a plot that show on map by size and color the countrys of the world given the scor on movies in our list 
+map <- get_map(location = c(lon =0, lat = 0), zoom = 1.1,
+               maptype = "satellite", scale = 2)
+# plotting the map with some points on it
+ggmap(map) +
+  geom_point( data = countryScorsDataFrame, 
+             aes(x = long.lon, y = lat.lat, color=Score, alpha = 0.1), size = 1+countryScorsDataFrame$Score/mean(countryScorsDataFrame$Score)) +  
+  guides(fill=FALSE, alpha=FALSE, size=FALSE)+
+  scale_color_gradient2(midpoint=mean(countryScorsDataFrame$Score), low="pink", mid="green", high="Yellow" )
+
+```
+![alt text](https://github.com/Ilya-Simkin/data-analysis-with-omdb-api/blob/master/mapScore.PNG "mapScore")
+
+###part Six :  conclusons and farther work!
+* we think the data base we connected with has great potential for farther work it may give much more information on bigger data sets that we can pull from that API . we will leave that for farther works.
+* we can conclude that the top movies is ruled by few very influancing countrys that show all the world what is good and whats not 
+* we didnt see any changes in movie length or any psudo linear patterns in movies but we may be doing so if we would explored much bigger data base with wider picture of the situation.
+* working with R is poor choice i hope i wont have to work with that toolset ever again and will go back to python 
+* this work gave me tools to analys data in very slow and poor way i would have much greater resultrs using tablue and spotfire as visualization exploration tools and python as programing data analytic script language.
+* 
+thank you and sorry for all the grammer errors was writing fast and markdown dosnt have spellcheck ...
