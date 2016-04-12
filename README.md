@@ -150,7 +150,7 @@ countrys[i] <- strsplit(MoviesdataFrame$Country[i],", ")
   }
 }
 ```
-##### Score preperations :
+##### Score preperations by ratings given in data  :
 * in this section we prepere the data score of movies by two diffrent score types
 * we check if the value is na and replace by mean value 
 * the first vector is meta score movie rate the seconed one is the imdb score both from our db
@@ -170,5 +170,131 @@ for (i in 1:length( MoviesdataFrame$imdbRating))
   { vector2 <- c(vector2, 50)}
   else
   {vector2 <- c(vector2, as.numeric(MoviesdataFrame$imdbRating[[i]], base = 0L)*10)}
+}
+```
+##### Corrolation of ganers 
+* in this section we prepering the data for the corrorlation so we need to get all the gener to year to length tuples 
+* after that we create a vector of all the geners with all the years and the avarage movie length in that year
+* by that vectors we will plot the corrolation between diffrent geners trugh the history and will look geners of movies that act in same manners 
+* eventually we will get a corrolation matrix
+```{r corrolation }
+Ganer_Year_length_Vec = vector(mode="list")
+for(i in 1:numOfRecords)
+{
+  temp = strsplit(MoviesdataFrame$Genre[i],", ")
+  for(y in 1:length(temp[[1]]))
+  {
+    key <- paste(temp[[1]][y],MoviesdataFrame$Year[i], sep = "_")
+    
+    if(!is.null(Ganer_Year_length_Vec[[key]]) )
+    {
+      oldVal <- Ganer_Year_length_Vec[[key]]
+      if(!is.na(str_extract(MoviesdataFrame$Runtime[i],"[0-9]+")))
+     { newVal <- c(strtoi(str_extract(MoviesdataFrame$Runtime[i],"[0-9]+"))+oldVal[[1]],oldVal[[2]]+1)
+     
+     }
+      else
+        
+      {  print("val na")
+        newVal <- c(120+oldVal[[1]],oldVal[[2]]+1)
+        }
+     }
+    else
+    {
+      if(!is.na(str_extract(MoviesdataFrame$Runtime[i],"[0-9]+"))){
+      newVal <- c(strtoi(str_extract(MoviesdataFrame$Runtime[i],"[0-9]+")),1)
+      }
+      else
+      {
+        print("st null")
+        newVal <- c(120,1)
+      }
+    }
+  Ganer_Year_length_Vec[[key]] <- newVal
+  }
+}
+# here we create the unique years and unique geners vectoris 
+uniqueYears = unique(MoviesdataFrame$Year)
+geners <-vector()
+for(i in 1:length(MoviesdataFrame$Genre )){
+  for(x in strsplit(MoviesdataFrame$Genre[i],", ")){
+geners <- c(geners,x)}
+}
+uniqueGeners = unique(geners)
+generVectors = vector(mode="list")
+for(i in uniqueGeners)
+{
+  for(j in uniqueYears)
+  {
+    key <- paste(i,j,sep="_")
+    
+    if(!is.null(Ganer_Year_length_Vec[[key]])  )
+    {
+      generVectors[[i]] <- c(generVectors[[i]], Ganer_Year_length_Vec[[key]][1] / Ganer_Year_length_Vec[[key]][2])
+    }
+    else
+    {
+      generVectors[[i]] <- c(generVectors[[i]],0)
+    }
+  }
+}
+#here we working with the corrolation data calculating the distance between vectors by the score we give each gener of movies as vector of years and in each one we look on the avarage movie length in that year
+corrMacorrMatrix<-data.frame()
+corrMacorrMatrix<-rbind.data.frame(generVectors)
+corrMacorrMatrix <- cor(corrMacorrMatrix)
+```
+#####  the country scors by awards system 
+* after parsing the data we decided to create a unique awards score system :
+* each movie get a score by its awards and then the country the movie was made at will get the total awards score for our data set
+* we give each country the score of awardsfor all the movies from that country 
+   the formula we used is 10 pints for oscar win 
+   7 points for golden globus win
+   5 points for BAFT award win
+   3 points for othere awards win
+   2 points for oscar nomination 
+   one point for othere awards nominations
+* afterwerd we manipulated the data to fit our needs and added the longtitude and latitude for each country to score table 
+```{r country scors by awards  }
+countrys <- list()
+countryToAwerdsScore <- vector(mode = "list")
+for(i in 1:numOfRecords)
+{
+  countrys[i] <- strsplit(MoviesdataFrame$Country[i],", ")
+  for(name in countrys[[i]])
+  {
+    if(!is.null(countryToAwerdsScore[[name]]))
+    { 
+      oldVal <- countryToAwerdsScore[[name]] 
+      newVal <- c(
+        oldVal[1] + (MoviesdataFrame$Awards_oscarWon[[i]] * 10) ,
+        oldVal[2] + (MoviesdataFrame$Awards_ggWon[[i]] * 7) ,
+        oldVal[3] + (MoviesdataFrame$Awards_BAFTAwon[[i]]  * 5) ,
+        oldVal[4] + (MoviesdataFrame$Awards_OtherWon[[i]]  * 3 ),
+        oldVal[5] + (MoviesdataFrame$Awards_oscarNominated[[i]]  * 2),
+        oldVal[6] + (MoviesdataFrame$Awards_OtherNominated[[i]]  * 1) )
+       }
+    else
+    {
+      newVal <- c(
+         MoviesdataFrame$Awards_oscarWon[[i]]  * 10 ,
+         MoviesdataFrame$Awards_ggWon[[i]]  * 7 ,
+         MoviesdataFrame$Awards_BAFTAwon[[i]] * 5 ,
+         MoviesdataFrame$Awards_OtherWon[[i]]  * 3,
+         MoviesdataFrame$Awards_oscarNominated[[i]]  * 2,
+         MoviesdataFrame$Awards_OtherNominated[[i]]  * 1 )
+    }
+    countryToAwerdsScore[[name]] <- newVal
+  }
+}
+
+# here we add the long and lat for each country name we got the information from another api that was mantioned before in line 85
+countryScorsDataFrame <- data.frame()
+for(countryname in names(countryToAwerdsScore))
+{
+countryScorsDataFrame <- rbind( countryScorsDataFrame, 
+                    c(
+  "Score" = sum(c(countryToAwerdsScore[[countryname]])),
+  "long" = countryToPosMap[[countryname]][1],
+  "lat" = countryToPosMap[[countryname]][2]) )
 }
 ```
