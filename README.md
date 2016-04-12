@@ -58,7 +58,32 @@ for(i in 2:numOfRecords)
 ```
 ###part three : first look on the data before manipulations done on it
 in this section we will explain what data we could recive from the api :
-but first here is an example of the raw data:
+but first here is an example of the raw data and explain all the features we have :
 
-![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
+![alt text](https://github.com/Ilya-Simkin/data-analysis-with-omdb-api/blob/master/1.PNG "first part of data")
+ * the data you can see here is the first part of our data frame : 
+ 1. name - is the name of the movie 
+ 2. year - the year when the movie came out
+ 3. rated - is the restriction of age for the given movie 
+ 4. relesed - is the exact date when the movie came out
+ 5. Gener - is a list of geners to which the movie belonges
+ 6. Director - the directr of the movie
+ 7. Writer - the writer of the move 
+ 
+![alt text](https://github.com/Ilya-Simkin/data-analysis-with-omdb-api/blob/master/2.PNG "scond part of data")
+* the data you can see here is the second part of our data frame in this part we can see the features : 
+8. Actors - list of all the actors played in the movie
+9. Plot - a short description of the main events of the movie
+10. Language - the first production langauges 
+11. Country - where the movie was created (not where it filmed but by what country team\s) may be more then one
+
+![alt text](https://github.com/Ilya-Simkin/data-analysis-with-omdb-api/blob/master/3.PNG "thired part of data")
+* the data you can see here is the thired part of our data frame in this part we can see the features : 
+12. Awards - a text field explaining the awards the movie won we will pars this fild farther on
+13. Poster - is a link to imdb data base that contains the movie poster 
+14. metaScore - one of the raiting score given to that movie
+15. IMDB score - another raiting score given to that movie by imdb voters 
+16. imdbid - id of the movie in imdb.com
+17. type - the type  movie or tv series
+
 
